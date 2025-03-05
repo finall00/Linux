@@ -1,44 +1,58 @@
 
-- [ ] Oque é o linux
+- [x] Oque é o linux
 - [x] Estrutura de Diretórios
 - [x] Navegação no terminal
-- [ ] Arquivos
+- [x] Arquivos
 	- [x] permissões
-	- [ ] Link simbólico e Hard Link
+	- [x] Link simbólico e Hard Link
 
-- [ ] Usuários
-	- [ ] criar usuário/modificar/excluir
-	- [ ] grupos/modificar/excluir
+- [x] Usuários
+	- [x] criar usuário/modificar/excluir
+	- [x] grupos/modificar/excluir
+	- [ ] sudo
 - [ ] Processos
 	- [ ] oq são
 	- [ ] manipular processos
 - [ ] User space/Kernel Space
 - [ ] SystemCTL
 - [ ] Demons / processos em segundo plano
+- [ ] Redes
+- [ ] Programas
+	- [ ] Samba
+	- [ ] DHCP
 - [ ] terminal
 - [ ] Principais comandos
-
+-[ ] Programas
+  - [ ] Config samba
+  - [ ] Apache
+- [x] Principais comandos
 
 ## O que é Linux
+
+O Linux é o kernel do sistema operacional. Ou seja, ele é responsável por todas as operações de baixo nível do sistema. O Linux foi desenvolvido por [Linus Torvalds](https://en.wikipedia.org/wiki/Linus_Torvalds) com base no Unix.
+
+Por volta de 1983, surgiu o projeto **GNU**, cujo nome é um acrônimo para _GNU's Not Unix_. Ele foi criado por [Richard Stallman](https://en.wikipedia.org/wiki/Richard_Stallman) com o objetivo de desenvolver um sistema operacional de software livre. Apesar de muitos avanços, o projeto enfrentava alguns problemas, principalmente relacionados a _**[task scheduling](https://en.wikipedia.org/wiki/Task_scheduler)**_ e **[timesharing](https://en.wikipedia.org/wiki/Incompatible_Timesharing_System)**. Esses problemas foram solucionados quando Stallman decidiu utilizar o kernel criado por Linus, em vez de desenvolver um próprio. Assim, surgiu o **GNU/Linux**.
 
 ## Estrutura de Arquivos
 
 
-Um computador realiza diversas instruções por segundo para que essas instruções sejam executadas é necessário o sistema buscar de algum lugar, esse lugar é a memoria principal ou seja a memoria ram. Porem temos um problema, a memoria ram é um tipo de [memoria volátil](#^volatil), e muitas dessas informação seria necessário manter para um uso futuro para isso podemos utilizar a **memoria segundaria**(HDD e SSD)  então o sistema funciona da seguinte forma: 
+Um computador executa diversas instruções por segundo. Para que essas instruções sejam processadas, o sistema precisa buscá-las de algum lugar, nesse caso, da memória principal, ou seja, da memória RAM.
+
+Porém, há um problema: a memória RAM é um tipo de [memória volátil](#%5Evolatil), ou seja, seus dados são perdidos quando o computador é desligado. Muitas dessas informações precisam ser mantidas para uso futuro. Para isso, podemos utilizar a **memória secundária** (HDD e SSD).
+
+O sistema, então, funciona da seguinte forma:
 
 ![Sistema de Arquivo](./images/Linux/Sistema_de_arquivos.md)
 
-A **CPU** só busca instruções na memoria principal então temos um processo ou **Demon** que é responsável por buscar as informações que a **CPU** necessita na memoria segundaria e leva para a memoria principal e quando o sistema precisar guardar a informação que foi processada ele move da memoria principal para a segundaria.
+A **CPU** busca instruções apenas na memória principal. Para isso, há um processo ou **daemon** responsável por transferir as informações da **memória secundária** para a **memória principal**, garantindo que a **CPU** tenha acesso aos dados necessários. Da mesma forma, quando o sistema precisa armazenar informações processadas, esse processo move os dados da memória principal para a memória secundária.
 
-
->[!Nota] 2- Memoria Volátil ^volatil
-> Em palavras simples é um tipo de memoria que necessita de energia para manter a informação ou seja assim que o computador é desligado a informação é perdida
-
+> [!Nota] 2 - Memória Volátil ^volatil  
+> Em termos simples, é um tipo de memória que necessita de energia para manter as informações. Ou seja, assim que o computador é desligado, os dados são perdidos.
 ### Virtual File System
 
-A forma como os arquivos são armazenados podem gerar uma serie de problemas, desde corrupção parcial do arquivo até torná-lo completamente inacessível, existem diversas forma de evitar isso o GNU/Linux escolheu utilizar o VFS (Sistema de arquivos Virtual) que como o nome sugere ele cria uma interface virtual onde gerencial nome, data de criação, modificação, local no disco etc... então o sistema de comunica com essa interface e ela é responsável por realmente salvar o arquivo assim evitando muitos problemas de corrupção de arquivos. 
+A forma como os arquivos são armazenados pode gerar uma série de problemas, desde corrupção parcial até a total inacessibilidade dos dados. Existem diversas maneiras de evitar isso, e o GNU/Linux optou por utilizar o **VFS** (_Virtual File System_ ou Sistema de Arquivos Virtual). Como o nome sugere, ele cria uma interface virtual que gerencia atributos como nome, data de criação, modificação, local no disco etc. O sistema se comunica com essa interface, que é responsável por realmente salvar o arquivo, evitando assim muitos problemas de corrupção de dados.
 
-Alem disso o **VSF** torna a forma de acessar arquivos uniforme ou seja para o sistema ele esta acessando o mesmo tipo de armazenamento porem por baixo dos panos ele esta acessando arquivos em **ext4**, **SMB**, NFS, entre outros.
+Além disso, o **VFS** torna o acesso a arquivos uniforme. Ou seja, para o sistema, todos os arquivos parecem estar em um mesmo tipo de armazenamento, mas, nos bastidores, eles podem estar sendo acessados em diferentes sistemas de arquivos, como **ext4**, **SMB**, **NFS**, entre outros.
 
 ![VSF](./images/Linux/VFS.png)
 
@@ -46,164 +60,292 @@ Alem disso o **VSF** torna a forma de acessar arquivos uniforme ou seja para o s
 
 ### Organização de diretórios
 
-Todo sistema operacional tem sua forma de organizar suas informações e no linux não é diferente ele organiza seus diretórios em um esquema de arvore e seus ramos, todos os arquivos são mapeados dentro da mesma arvore, onde o diretório raiz é o "/" (raiz em ingles é root por isso o Usuário administrador do linux é conhecido como root).
+Todo sistema operacional possui sua própria forma de organizar informações, e no Linux não é diferente. Ele estrutura seus diretórios em um esquema de árvore, onde todos os arquivos são mapeados dentro de uma única hierarquia. O ponto de partida dessa estrutura é o diretório raiz, representado por **"/"**.
+
+A palavra _root_ significa "raiz" em inglês, e é por isso que o usuário administrador do Linux é chamado de **root**.
 
 **Observações sobre o sistema de arquivos do GNU/Linux:**
 
-#### Especificando caminhos:
-O GNU/Linux não usa a barra invertida (\\) para separar os componentes; ele usa barra (/) como alternativa. Por exemplo, como no Windows, os dados podem ser armazenados em` C:\Meus Documentos\Trabalho`, ao passo que, no GNU/Linux, eles seriam armazenados em `/home/usuario/Documents/Trabalho. `
+#### Especificando Caminhos
 
-#### Partição, diretórios e unidades: 
-O GNU/Linux não usa letras de unidade para organizar a unidade como o Microsoft Windows faz, em um GNU/Linux não podemos dizer se estamos endereçando uma partição, um dispositivo de rede ou um diretório "comum" e um Drive pois todos os dispositivos estão montados dentro de uma mesma árvore. 
+No GNU/Linux, a separação de diretórios é feita com a **barra normal ( / )**, diferentemente do Windows, que usa a **barra invertida ( \ )**.
 
-#### Sensibilidade a maiúsculas e minúsculas:
-o sistema de arquivos GNU/Linux diferencia maiúsculas de minúsculas, ele distingue entre nomes de arquivo em letras maiúsculas e minúsculas.
+**Exemplo:**
 
-#### Extensões de arquivo:
-No GNU/Linux, um arquivo pode ter a extensão '.txt', mas não é necessário que um arquivo tenha uma extensão de arquivo, ao trabalhar com o Shell, ele cria alguns problemas para os iniciantes diferenciarem entre arquivos e diretórios.
+- No Windows: `C:\Meus Documentos\Trabalho`
+- No GNU/Linux: `/home/usuario/Documents/Trabalho`
 
-#### Arquivos ocultos:
-o GNU/Linux distingue entre arquivos padrão e arquivos ocultos, principalmente os arquivos de configuração estão ocultos no sistema operacional GNU/Linux, normalmente, não precisamos acessar ou ler os arquivos ocultos e os arquivos ocultos no GNU/Linux são representados por um ponto (.) Antes do nome do arquivo (por exemplo, .ignore).
+---
 
-![Principais Diretorios](./images/Linux/principais_diretorios.png)
+#### Partições, Diretórios e Unidades
+
+Diferente do Windows, o GNU/Linux **não usa letras de unidade (C:, D:, E:)** para identificar dispositivos de armazenamento.
+
+Em vez disso, **tudo no sistema de arquivos faz parte de uma única hierarquia**. Isso significa que não há distinção entre um diretório comum, uma partição ou até mesmo um dispositivo de rede — todos são montados dentro da mesma estrutura de diretórios.
+
+---
+
+#### Sensibilidade a Maiúsculas e Minúsculas
+
+No GNU/Linux, os nomes de arquivos **são sensíveis a maiúsculas e minúsculas**. Ou seja, os arquivos abaixo são diferentes entre si:
+
+```bash
+documento.txt != Documento.txt != DOCUMENTO.TXT
+```
+
+Isso pode ser um detalhe importante ao manipular arquivos no terminal ou ao desenvolver scripts.
+
+---
+
+#### Extensões de Arquivo
+
+Diferente do Windows, no GNU/Linux os arquivos **não precisam ter uma extensão** para funcionar corretamente.
+
+Por exemplo, um arquivo pode ter a extensão `.txt`, mas não há nenhuma obrigação de que ele tenha um sufixo. Isso pode ser confuso para iniciantes, pois não há uma forma visual imediata de diferenciar arquivos comuns de diretórios apenas pelo nome.
+
+---
+
+#### Arquivos Ocultos
+
+O GNU/Linux diferencia arquivos comuns de **arquivos ocultos**.
+
+Normalmente, arquivos de configuração do sistema são ocultos para evitar modificações acidentais. No GNU/Linux, qualquer arquivo cujo nome começa com um **ponto ( . )** é considerado oculto.
+
+**Exemplos:**
+
+- Arquivo comum: `meuarquivo.txt`
+- Arquivo oculto: `.meuarquivo.txt`
+
+Para visualizar arquivos ocultos no terminal, use o comando:
+
+```bash
+ls -a
+```
 
 
-#### Diretório / (chamado de raiz): 
-Raiz da hierarquia primária e é o primeiro diretório. Ele contém todos os outros diretórios, ou seja, os subdiretórios e apenas o usuário root tem permissão para escrever aqui;
+---
+### Principais Diretórios 
 
-#### Diretório /bin (binários do usuário):
-Ele contém os executáveis binários relacionados aos comandos Linux comuns usados por todos os usuários no modo de usuário único estão localizados neste diretório. Alguns arquivos presentes neste diretório são: ls, cp, grep, ping, cat, etc;
+Assim como no Windows, o **GNU/Linux** possui diversos diretórios reservados para funções específicas, como armazenar bibliotecas do sistema, guardar arquivos essenciais para a inicialização e organizar os arquivos dos usuários.
 
-#### Diretório /boot (arquivos de inicialização boot):
-Ele contém arquivos do carregador de boot, kernel, initrd, grub e outros arquivos e diretórios estão localizados neste diretório;
+A seguir, exploramos os principais diretórios do sistema:
 
-#### Diretório /dev (arquivos de dispositivo):
-Ele contém os arquivos essenciais relacionados aos dispositivos conectados ao sistema, isso inclui dispositivos de terminal, USB, dispositivos de rede e quaisquer outros dispositivos de I/O que estejam conectados ao sistema; 
+![Principais Diretórios](./images/Linux/principais_diretorios.png)
 
-#### Diretório /etc (arquivos de configuração):
-Este diretório tem um significado, ou seja, etc significa ‘edit to config’ este diretório contém os arquivos de configuração exigidos pelos programas instalados, os arquivos são configurações específicas do host e de todo o sistema, necessárias para o funcionamento adequado do sistema. Este diretório também contém scripts de shell para inicialização e desligamento do sistema que são usados para iniciar ou parar programas individuais. Alguns programas grandes e complexos estão neste diretório; 
+---
 
-#### Diretório /home (diretórios pessoais):
-Este diretório contém os diretórios pessoais do usuário, contendo arquivos salvos e configurações pessoais. Cada usuário terá um diretório separado com seu nome de usuário nesse diretório, exceto o usuário root, porque toda vez que um novo usuário é criado, um diretório é criado no nome do usuário dentro do diretório inicial;
+### Diretórios Fundamentais
 
-#### Diretório /lib (bibliotecas do sistema): 
-Este diretório contém bibliotecas que são essenciais para os binários em /bin e /sbin, os nomes dos arquivos de biblioteca são ld* ou lib*.so.*, etc; 
+#### **`/` (Raiz do sistema)**
 
-#### Diretório /media (dispositivos de mídia removíveis):
-Diretório temporário de montagem para mídia removível, como CD-ROM, por exemplo: /media/cdrom para CD-ROM; /media/floppy para unidades de disquete; /media/cdrecorder para gravador de CD;
+O diretório **raiz** é o ponto de partida da hierarquia de arquivos no GNU/Linux. Todos os outros diretórios estão dentro dele. Apenas o **usuário root** tem permissão para escrever diretamente aqui.
 
-#### Diretório /mnt (diretório de montagem):
-Diretório de montagem temporário onde o administrador do sistema pode montar sistemas de arquivos;
+#### **`/bin` (Binários essenciais)**
 
-#### Diretório /opt (pacotes de software de aplicativo opcionais):
-Este diretório contém aplicativos complementares de fornecedores individuais, tal como Tomcat, Monero, etc; 
+Contém comandos básicos usados por todos os usuários, como:  
+-  `ls`, `cp`, `grep`, `ping`, `cat`, etc.
 
-#### Diretório /proc (informações do processo):
-Este é um sistema de arquivos virtual que fornece informações sobre o processo e o kernel. Esses arquivos neste diretório são gerados, preenchidos e excluídos automaticamente pelo sistema; 
+#### **`/boot` (Arquivos de inicialização)**
 
-#### Diretório /root (diretório raiz):
-Este é o diretório inicial do usuário root; 
+Armazena arquivos essenciais para o **boot do sistema**, como:  
+- O **kernel**, o **GRUB**, e imagens de inicialização (`initrd`).
 
-#### Diretório /sbin (binários do sistema):
-Este diretório contém binários essenciais do sistema. Os comandos do GNU/Linux que estão localizados neste diretório são usados pelo administrador do sistema, para manutenção do sistema e propósito de configuração, por exemplo: fsck, reboot, fdisk, ip, init, etc;
+#### **`/dev` (Dispositivos do sistema)**
 
-#### Diretório /srv (dados de serviço):
-Este diretório contém dados específicos do site servidos pelo sistema, como dados e scripts para servidores da web, dados oferecidos por servidores FTP e repositórios para sistemas de controle de versão, ou seja, dados relacionados a serviços específicos de servidor, por exemplo: /srv/cvs contém dados relacionados ao CVS, etc;
+Aqui estão representados os **dispositivos de hardware** como arquivos, incluindo:  
+-  Terminais (`tty`), **USBs**, dispositivos de rede, discos (`sda`, `sdb`, etc.).
 
-#### Diretório /sys (sistema):
-Este diretório contém informações sobre dispositivos, drivers e alguns recursos do kernel. 
+#### **`/etc` (Configurações do sistema)**
 
-#### Diretório /tmp (arquivos temporários):
-Este diretório contém arquivos temporários criados pelo sistema e os usuários que serão inicializados quando o sistema for reinicializado; 
+Contém arquivos de configuração **do sistema e dos programas instalados**, além de **scripts de inicialização**.
 
-#### Diretório /usr (programas do usuário):
-Este diretório contém dados de usuário somente leitura, como binários, bibliotecas, documentação e código-fonte para programas de segundo nível, como utilitários de usuário e aplicativos;
+#### **`/home` (Diretórios dos usuários)**
 
-#### Diretório /usr/bin:
-contém arquivos binários para programas do usuário. Se você não conseguir encontrar um binário de usuário em /bin, devemos procurar em /usr/bin; 
+Cada usuário tem seu próprio diretório dentro de **`/home`**, onde ficam seus arquivos pessoais e configurações.  
+-  Exemplo: `/home/joao`, `/home/maria`.
 
-#### Diretório /usr/include:
-contém arquivos de inclusão padrão; Diretório /usr/lib: contém bibliotecas para os binários em /usr/bin e /usr/sbin; 
+#### **`/lib` (Bibliotecas do sistema)**
 
-#### Diretório /usr/local: 
-hierarquia terciária para dados locais. contém programas de usuários que você instala a partir de código fonte;
+Contém bibliotecas essenciais para os **binários em** `/bin` **e** `/sbin`.  
+-  Exemplos: `lib*.so.*`, `ld*`.
 
-#### Diretório /usr/sbin:
-contém arquivos binários para administradores de sistema. Se você não conseguir encontrar um binário do sistema em /sbin, você deve procurar em /usr/sbin. Ele também contém binários de sistema não essenciais, por exemplo: daemons para serviços de rede; 
+#### **`/media` (Mídias removíveis)**
 
-#### Diretório /usr/share:
-contém dados independentes de arquitetura (compartilhados); 
+Ponto de montagem automático para **dispositivos removíveis** como CDs e pendrives.  
+-  Exemplos: `/media/cdrom`, `/media/usb`.
 
-#### Diretório /usr/src:
-contém o código fonte como fontes do kernel do GNU/Linux, arquivos de cabeçalho e documentação; 
+#### **`/mnt` (Montagem manual de dispositivos)**
 
-#### Diretório /usr/X11:
-contém arquivos relacionados ao X Window System; Diretório /var (arquivos variáveis): Este diretório contém arquivos cujo conteúdo deve ser alterado continuamente durante a operação normal do sistema - como logs, arquivos de spool e arquivo de e-mail temporário;
+Usado para montagem manual de partições ou dispositivos.
 
-#### Diretório /var/log:
-contém arquivos de log do sistema.  É importante que antes de uma prova de certificação se repasse todos estes diretórios, recomendo rever a imagem abaixo que possui uma síntese desta organização.
+#### **`/opt` (Softwares adicionais)**
+
+Armazena softwares instalados manualmente ou de terceiros.  
+-  Exemplo: Aplicações como **Tomcat**, **Monero**, etc.
+
+---
+
+### Diretórios do Sistema
+
+#### **`/proc` (Informações do sistema e processos)**
+
+É um sistema de arquivos virtual que fornece detalhes sobre os **processos em execução e o kernel**.
+
+#### **`/root` (Diretório do root)**
+
+Diretório pessoal do **usuário root**, equivalente ao `/home`, mas exclusivo para o administrador.
+
+#### **`/sbin` (Binários do sistema)**
+
+Contém comandos administrativos utilizados pelo **root**, como:  
+-  `fsck`, `reboot`, `fdisk`, `ip`, `init`.
+
+#### **`/srv` (Serviços do sistema)**
+
+Armazena arquivos e dados utilizados por **servidores** como **FTP, HTTP** e **repositórios de controle de versão**.
+
+#### **`/sys` (Informações sobre dispositivos e drivers)**
+
+Fornece acesso a informações sobre o **hardware e o kernel**.
+
+#### **`/tmp` (Arquivos temporários)**
+
+Armazena arquivos **temporários do sistema** e dos usuários.  
+-  Seu conteúdo é apagado ao reiniciar o sistema.
+
+---
+
+### Diretórios de Usuário
+
+#### **`/usr` (Programas e bibliotecas de usuários)**
+
+Contém programas, bibliotecas e arquivos compartilhados pelos usuários.
+
+**Subdiretórios importantes em `/usr`:**
+
+- **`/usr/bin`** → Binários de aplicativos de usuário (`firefox`, `vim`, etc.).
+- **`/usr/include`** → Arquivos de cabeçalho para compilação.
+- **`/usr/lib`** → Bibliotecas para os programas em `/usr/bin` e `/usr/sbin`.
+- **`/usr/local`** → Para programas instalados manualmente a partir do código-fonte.
+- **`/usr/sbin`** → Binários administrativos não essenciais (ex.: **daemons** de rede).
+- **`/usr/share`** → Arquivos de documentação e ícones.
+- **`/usr/src`** → Código-fonte do kernel e outros pacotes.
+- **`/usr/X11`** → Arquivos do X Window System (interface gráfica).
+
+---
+
+### Diretórios de Logs e Dados Variáveis
+
+#### **`/var` (Arquivos variáveis)**
+
+Armazena dados que **mudam constantemente**, como logs, emails e caches.
+
+**Subdiretórios importantes em `/var`:**
+
+- **`/var/log`** → Arquivos de logs do sistema.
+- **`/var/spool`** → Fila de impressão e e-mails pendentes.
+
+---
+
+###  **Resumo e Dicas**
+
+- Todos os arquivos no Linux estão dentro de uma **única estrutura de diretórios**.
+- O usuário comum **armazena seus arquivos em** `/home/usuario/`.
+- O usuário root tem permissões especiais e seu diretório pessoal é **`/root`**.
+- Os dispositivos são representados como **arquivos dentro de `/dev/`**.
+- Arquivos de configuração ficam **dentro de `/etc/`**.
+- Logs do sistema ficam **em `/var/log/`**.
+
+> [!Tip]
+**Dica para iniciantes:** Antes de provas de certificação, revise a estrutura de diretórios e a imagem acima para memorizar melhor a organização do sistema de arquivos!
 
 
 ![Principais Diretorios](./images/Linux/principais_diretorios2.png)
+
+--- 
 ## Navegação no terminal
 
+Agora que já conhecemos os principais diretórios do Linux, vamos aprender a nos mover pelo sistema de arquivos usando o terminal.
 
-Agora que sabemos quais são os principais diretórios do linux  vamos finalmente nos mover particularmente eu gosto de pensar que estamos no fundo do mar onde não se pode ver nada então usamo de um sonar para nos situarmos, o sonar seriam os comandos como `pwd` que mostra em qual diretório você esta.
+Uma boa analogia é imaginar que estamos **no fundo do mar**, onde não podemos ver nada. Para nos localizarmos, usamos um **sonar**, que no terminal são os comandos de navegação. O primeiro deles é o **`pwd`**, que nos diz exatamente onde estamos.
 
-> [!tip] Dica
-> Sempre que sentir duvida em um comando pode ser usar ```man < comando>```  para ter uma manual do comando.
+> [!Tip] Dica:
+> Sempre que tiver dúvidas sobre um comando, use:
+> 
+>  `man <comando>`
+> Isso abrirá o manual completo do comando.
+ 
+---
 
+### **Localizando-se no Terminal**
 
-**pwd** exibe o caminho do diretório atual, perfeito para se localizar no terminal:
+#### **`pwd` (Print Working Directory)**
 
-```shell
-$> pwd   
-/home/usuario/Documents
+O comando `pwd` exibe o **caminho completo** do diretório em que você está no momento:
+
+```bash
+$> pwd    /home/usuario/Documents
 ```
+
+Isso é útil para evitar confusão ao navegar entre os diretórios.
 
 ---
 
+### **Listando Arquivos e Diretórios**
 
-**ls** lista os diretórios e arquivos dentro do diretório atual
+#### **`ls` (Listar arquivos e diretórios)**
 
-```shell
-$> ls
-arquivo1.txt  arquivo2.md  arquivo3.sh  diretorio1  executavel1
+O comando `ls` mostra o conteúdo do diretório atual:
+
+```sh
+$> ls arquivo1.txt  arquivo2.md  arquivo3.sh  diretorio1  executavel1
 ```
 
-O `ls` é um comando que pode ser utilizado com diversos parâmetros para facilitar a leitura note que na saída acima não conseguimos distinguir o'que é arquivo ou diretório(Quer dizer em alguns terminais os diretórios aparecem com cores diferente) podemos acrescentar `-l` para termos um pouco mais de informações:
+Por padrão, `ls` não diferencia arquivos e diretórios. Para obter mais detalhes, usamos a opção `-l`:
 
-```shell
-$> ls -l
-.rw-r--r-- 0 finall 29 Jan 21:52  arquivo.txt
-.rw-r--r-- 0 finall 29 Jan 21:52  arquivo2.sh
-drwxr-xr-x - finall 29 Jan 21:52  diretorio1
-.rwxr-xr-x 0 finall 29 Jan 21:52  executavel1
-lrwxrwxrwx - finall 29 Jan 21:52  link_exec -> executavel1
+
+```bash
+$> ls -l 
+.rw-r--r--  0 finall 29 Jan 21:52  arquivo.txt 
+.rw-r--r--  0 finall 29 Jan 21:52  arquivo2.sh 
+drwxr-xr-x  - finall 29 Jan 21:52  diretorio1 
+.rwxr-xr-x  0 finall 29 Jan 21:52  executavel1 
+lrwxrwxrwx  - finall 29 Jan 21:52  link_exec -> executavel1`
 ```
 
-usando o `-l` temos diversas informações a mais como as permissões, quem é o dono do arquivo e a data de modificação do arquivo.
+Aqui, temos informações extras, como:
 
-para saber mais sobre permissões vá para > [[Linux#Permissões e Arquivos]]  mas, vamos analisar apenas a primeira e a quarta coluna onde a primeira indica se é um diretório (d) ou um link (l) e na quarta coluna vemos se o arquivo é um executável pela presença do `x`.
+- **Primeira coluna** → Indica o tipo de arquivo:
+    - **`d`** → Diretório
+    - **`l`** → Link simbólico
+    - **`-`** → Arquivo comum
+- **Quarta coluna** → Se o arquivo for executável, terá **`x`** nas permissões.
+
+>  Para mais detalhes sobre permissões de arquivos, veja: **[Linux#Permissões e Arquivos]**.
 
 ---
 
-O comando `cd` (change directory)  como o nome sugere ele serve para se mover entre os diretórios:
+### **Mudando de Diretório**
 
-```shell
-$> cd <caminho> # Vai para um diretório específico
+#### **`cd` (Change Directory)**
+
+O comando `cd` permite navegar entre diretórios:
+
+
+```bash
+$> cd <caminho>   # Vai para um diretório específico`
 ```
 
-Algumas formas se usar o comando `cd`:
+**Exemplos práticos:**
 
-```shell
-$> cd ~        # Vai para o diretório home do usuário 
-$> cd ..       # Sobe um nível na hierarquia de diretórios
-$> cd -        # Volta para o diretório anterior
+```bash
+$> cd ~        # Vai para o diretório pessoal do usuário   
+$> cd ..       # Sobe um nível na hierarquia de diretórios   
+$> cd -        # Volta para o diretório anterior  
 $> cd /        # Vai para o diretório raiz
 ```
 
-
+Com essas ferramentas, você já pode começar a explorar o sistema de arquivos no Linux de forma eficiente!
 
 ---
 
@@ -240,59 +382,93 @@ $> rm *.log # Remove todos os arquivos que terminam em `.log`.
 > Cuidado ao excluir um arquivo sempre confira o comando antes de executa uma vez que excluímos um arquivo perdemos os ponteiros que aponta para o bloco de dados no armazenamento.
 ## Permissões e Arquivos
 
-No GNU/Linux muitas coisas no sistema são interpretadas apenas como arquivos e como vimos com o comando `ls -l` podemos ver o'que realmente é aquele arquivo baseado no primeiro caractere da exibição:
+No **GNU/Linux**, tudo é tratado como um arquivo, e isso inclui até dispositivos e processos. Quando usamos o comando `ls -l`, podemos ver as permissões e o tipo do arquivo. O primeiro caractere da exibição indica o tipo do arquivo.
 
-● Arquivos regulares ('**.**'): 
-	 ○ Arquivos de dados; 	
-	 ○ Arquivos executáveis;
-● Diretórios ('**d**'); 
-● Arquivos especiais: 
-	○ Dispositivos de Blocos ('**b**');  
-	○ Dispositivos de Caracteres ('**c**'); 
-	○ Links simbólicos ('**l**');
-● Comunicação inter processos IPC: 
-	○ Socket ('**s**');
-	○ Pipes de comunicação ('**p**');
+Veja os principais tipos de arquivos:
 
-Todos os Arquivos que são criados possuem um dono e um grupo, por exemplo temos um usuário **aluno** que pertence ao grupo **alunos** se ele criar um arquivo a permissão padrão sera:
+- **Arquivos Regulares** (`-`):  
+    Arquivos comuns de dados e arquivos executáveis.
+    
+- **Diretórios** (`d`):  
+    Representam pastas ou diretórios no sistema.
+    
+- **Arquivos Especiais**:  
+    Arquivos relacionados a dispositivos e recursos do sistema:
+    
+    - **Dispositivos de Blocos** (**`b`**): Usados para acessar dispositivos de armazenamento, como discos rígidos.
+    - **Dispositivos de Caracteres** (**`c`**): Usados para acessar dispositivos que transferem dados byte a byte, como teclados e mouses.
+    - **Links Simbólicos** (**`l`)**: Arquivos que apontam para outros arquivos ou diretórios.
+- **Comunicação entre Processos (IPC)**:  
+    Arquivos usados para comunicação entre diferentes processos do sistema:
+    
+    - **Sockets** (**`s`**): Usados para comunicação de rede.
+    - **Pipes de Comunicação** (**`p`**): Usados para enviar dados entre processos.
 
-● O dono do arquivo (aluno) pode: ler e escrever no arquivo; 
-● O grupo dono do arquivo (alunos) pode: ler o arquivo;
-● Outros usuários podem: ler o arquivo;
+Essas letras nos ajudam a identificar rapidamente o tipo de arquivo.
 
-Essas  regras são definidas pelo **Umask** do sistema operacional. Vimos como ficam a permissão padrão de um arquivo mas como seria se esse mesmo usuário cria-se um diretório: 
+---
 
-● O dono do diretório (aluno) pode: ler, escrever e executar;
-● O grupo dono do diretório (alunos) pode: ler e executar;
-● Outros podem: ler e executar;
+## Permissões de Arquivos
 
-Para ter mais informações de um determinado aquivo podemos utilizar o comando `file`:
+Todo arquivo no GNU/Linux tem um **dono** e um **grupo**. Quando um usuário cria um arquivo, as permissões padrão são determinadas pela configuração do **Umask**  do sistema (é possível alterar esse arquivo para personalizar as permissões padrões). Vamos analisar um exemplo:
 
-```shell
-$> file arquivo1
-arquivo1: Unicode text, UTF-8 text
+### Arquivos
+
+Imaginando que o usuário **aluno** pertencente ao grupo **alunos** cria um arquivo, as permissões padrão são:
+
+- **Dono do arquivo** (**aluno**): pode ler e escrever no arquivo.
+- **Grupo dono do arquivo** (**alunos**): pode apenas ler o arquivo.
+- **Outros usuários**: podem ler o arquivo.
+
+### Diretórios
+
+Agora, se o mesmo usuário criar um diretório, as permissões padrão serão:
+
+- **Dono do diretório** (aluno): pode ler, escrever e executar.
+- **Grupo dono do diretório** (alunos): pode ler e executar.
+- **Outros usuários**: podem ler e executar.
+
+Essas permissões podem ser modificadas conforme necessário.
+
+---
+
+### Identificando o Tipo de Arquivo
+
+Para obter mais informações sobre o tipo de um arquivo, podemos usar o comando `file`:
+
+```bash
+$> file arquivo1 arquivo1: Unicode text, UTF-8 text
 ```
 
-vemos que o `arquivo1` é um arquivo de texto e esta no padrão UTF-8.
+Aqui, o comando nos informa **que** `arquivo1` é um arquivo de texto no formato **UTF-8**.
 
-> [!warning] Aviso
-> Arquivos são muito complexos e involve uma serie de fatores e outros conhecimentos como i-nodes, caso fique interessado no assunto recomendo o livro de Sistemas Operacionais Modernos do  Andrew Tanenbaum ou vai de internet mesmo.
+---
 
-Para lermos as informações do arquivo nos podemos usar alguns comandos entre eles esta o `cat` e o `more`:
+> [!warning] Aviso  
+> Arquivos no **GNU/Linux** são complexos e envolvem conceitos como i-nodes, que determinam como os arquivos são armazenados e acessados. Se você se interessar por esses assuntos mais avançados, recomendo o livro **Sistemas Operacionais Modernos**, de **Andrew Tanenbaum**, ou pesquisar mais na internet.
+
+---
+
+### Lendo o Conteúdo de um Arquivo
+
+Existem comandos para ler e visualizar o conteúdo dos arquivos:
+
+#### `cat` (concatenate)
+
+O comando `cat` exibe todo o conteúdo do arquivo na tela de uma vez:
 
 ```shell
-$> cat arquivo1
-isso é um texto muito 
+$> cat arquivo1 isso é um texto muito longo
+```
+#### `more` (paginador)
+
+O comando `more` exibe o conteúdo de forma paginada, útil para arquivos grandes. O conteúdo é exibido em partes, e você pode pressionar **Enter** para continuar. Para sair antes do fim, basta pressionar **q** (quit):
+
+```shell 
+$> more arquivo1 isso é um texto muito longo
 ```
 
-o `cat` mostra tudo que esta dentro do arquivo e converte para um formato de texto.
-
-```shell
-$> more arquivo1
-isso é um texto muito
-```
-
-o `more` faz a mesma coisa do `cat` porem ele é usado para arquivos maiores onde ele cria um buffer e vai exibindo parte a parte do texto conforme o usuário vai apertando a tecla **Enter** e caso queira sair antes de acabar todo o texto pode simplesmente pressionar o **q** (quit).
+O `more` cria um buffer e vai exibindo parte do conteúdo conforme você pressiona a tecla **Enter**.
 
 > [!Tip] Aviso
 > Para mais comandos de leitura de arquivo vá para [[Linux#📜 **3. Manipulação de Arquivos**]]
@@ -301,6 +477,7 @@ o `more` faz a mesma coisa do `cat` porem ele é usado para arquivos maiores ond
 Lembra dessa saída ? vamos olhas com mais calma as permissões 
 
 ```shell
+$> ls -l
 .rw-r--r-- 0 finall 29 Jan 21:52 arquivo.txt
 .rw-r--r-- 0 finall 29 Jan 21:52 arquivo2.sh
 drwxr-xr-x - finall 29 Jan 21:52 diretorio1
@@ -533,17 +710,457 @@ cat: link_arquivo.txt: No such file or directory
 ```
 
 o hard link funcionou perfeitamente ja o link simbólico deu um erro de arquivo ou diretório não existe.
+
+---
 ## Usuários
 
-O GNU/Linux é um sistema multi usuário ou seja ele funciona com múltiplos usuários ao mesmo tempo e para não virar bagunça precisamos  
-### Gerenciar usuários
+O **GNU/Linux** é um sistema **multiusuário**, ou seja, ele permite que vários usuários acessem o sistema simultaneamente. Para garantir um funcionamento organizado e seguro, é necessário gerenciar corretamente tanto os **usuários** quanto os **grupos**.
 
-### Gerenciar Grupos
+### Gerenciamento de Usuários
+
+Cada usuário no **GNU/Linux** possui um nome, um identificador único (**ID**), **permissões** e **configurações de acesso**. Aqui estão os principais comandos para gerenciar usuários:
+
+O linux armazena informações de usuários em um arquivo chamado `passwd`  e podemos editar esse arquivo para para modificar os usuários porem isso é trabalhoso então vamos usar alguns comandos para poder criar e gerenciar nosso usuarios.
+
+#### Criando usuário
+
+Para adicionar um novo usuário ao sistema, usamos o comando `useradd`. Por padrão, ele cria um diretório pessoal e configura algumas permissões básicas.
+
+```shell
+$> sudo useradd nome_do_usuario
+```
 
 
-## Processos
+**Adicionar um usuário com diretório pessoal e shell padrão**:  
+Para especificar o diretório pessoal e o shell, usamos a opção `-m` e `-s`:
+
+```shell
+$> sudo useradd -m -s /bin/bash nome_do_usuario
+```
+
+#### **Alterar a senha de um usuário**:  
+
+Para definir ou alterar a senha de um usuário, usamos o comando `passwd`:
+
+```shell
+$> sudo passwd nome_do_usuario
+```
+
+
+#### **Exibir informações de um usuário**:  
+Para visualizar as informações de um usuário, incluindo o ID, grupos e outras configurações, usamos o comando `id`:
+
+```shell
+$> id nome_do_usuario
+```
+
+#### **Alterar informações de um usuário**:  
+
+Para modificar informações de um usuário (como o nome do usuário, diretório pessoal, etc.), usamos `usermod`:
+
+```shell
+$> sudo usermod -l novo_nome nome_do_usuario
+```
+
+#### **Excluir um usuário**:  
+
+Para remover um usuário do sistema, podemos usar `userdel`. A opção `-r` também remove o diretório pessoal do usuário:
+
+```shell
+$> sudo userdel -r nome_do_usuario
+```
+
+#### **Listar todos os usuários**:  
+Para listar todos os usuários do sistema, podemos consultar o arquivo `/etc/passwd`:
+
+```shell
+$> cat /etc/passwd
+```
+
+
+### Gerenciamento de Grupos
+
+Os **grupos** permitem que você organize usuários com permissões semelhantes. Aqui estão os comandos para gerenciar grupos:
+
+- **Adicionar um novo grupo**:  
+Para criar um novo grupo no sistema, usamos o comando `groupadd`:
+
+
+```shell
+$> sudo groupadd nome_do_grupo
+```
+
+- **Adicionar um usuário a um grupo**:  
+Para adicionar um usuário a um grupo existente, usamos o comando `usermod` com a opção `-aG`:
+
+
+```shell
+$> sudo usermod -aG nome_do_grupo nome_do_usuario
+```
+
+
+- **Remover um usuário de um grupo**:  
+Para remover um usuário de um grupo, usamos o comando `gpasswd`:
+
+```shell 
+sudo gpasswd -d nome_do_usuario nome_do_grupo
+```
+
+- **Exibir os grupos aos quais um usuário pertence**:  
+Para listar os grupos aos quais um usuário pertence, podemos usar o comando `groups`:
+
+
+```shell
+groups nome_do_usuario
+```
+
+- **Excluir um grupo**:  
+Para excluir um grupo, usamos o comando `groupdel`:
+
+```shell
+$> sudo groupdel nome_do_grupo
+```
+
+- **Listar todos os grupos**:  
+Para listar todos os grupos do sistema, podemos consultar o arquivo `/etc/group`:
+
+
+```shell 
+$> cat /etc/group
+```
+
+
+---
+
+### Comandos Adicionais de Gerenciamento
+
+Além dos comandos básicos para usuários e grupos, há outros comandos úteis para administrar o sistema de forma eficiente:
+
+- **Verificar quais usuários estão logados**:  
+Para verificar os usuários que estão atualmente logados no sistema, usamos o comando `who`:
+
+
+```shell
+$> who
+```
+
+- **Mostrar o histórico de login de um usuário**:  
+Para visualizar os logins passados de um usuário, usamos o comando `last`:
+
+```shell
+$> last nome_do_usuario
+```
+
+- **Verificar detalhes sobre a conta de um usuário**:  
+Para obter informações detalhadas sobre uma conta de usuário, podemos usar o comando `chage`:
+
+
+```shell
+$> sudo chage -l nome_do_usuario
+```
+
+
+### Privilégios de Usuários
+
+Um dos principais conceitos de segurança do mundo **Linux** e **Unix** é utilizar um usuário com permissões limitadas e so quando necessário escalar o privilegio, para isso usamos um programa muito bem difundido nas distribuições **linux** que o **SUDO**.
+
+Mas vamos em partes, existem três maneiras básicas de obter privilégios de root.
+
+#### Login como root
+
+o método mais simples é logar direto como **root** (algumas configurações não permitem login direto como **root** sendo necessário outra alternativa)
+
+#### Usando SU 
+
+Fazer login como **root** não é uma boa ideia afinal de contas criamos um outro usuário justamente para limitarmos as permissões do nosso usuário.
+
+Por isso podemos usar o `su`, "substitute user"  para mudar de usuário. Assim podemos logar com nosso usuário e so elevar  nosso privilegio quando for necessário. 
+
+```shell
+$> su
+```
+
+sera solicitado a senha do usuário root e podemos executar os comando, e para voltar para o nosso usuário antigo podemos executar:
+
+```shell
+$> exit
+```
+
+> [!warning] Nota
+> O `su` não serve somente para logar como **root** podemos especificar qual usuário queremos logar, `su usuario2`   
+
+#### SUDO
+
+Finalmente vamos falar do **sudo** uma forma de executar um comando com privilégios de root sem a necessidade de iniciar um novo terminal. 
+
+```shell
+$> sudo <comando>
+```
+
+sera solicitado a senha do usuário atual.
+
+Devido às suas implicações de segurança, o acesso `sudo` não é concedido a usuários por padrão e deve ser configurado antes de funcionar corretamente. O `sudo` é configurado a partir do arquivo `/etc/sudoers`.
+
+> [!danger] Aviso
+> Para editar diretamente o arquivo `sudoers`  por motivos de segurança é recomendado utilizar o `visudo`.
+
+
+#### Conceder privilégios **sudo** a um usuário
+
+Podemos adicionar um usuário ao **grupo** sudo para conceder privilégios de root:
+
+```shell
+$> sudo usermod -aG sudo <usuario>
+```
+
+ou podemos utilizar:
+
+```shell
+$> sudo gpasswd -a <usuario> sudo
+```
+
+> [!tip] Nota
+> No **CentOS** é um pouco diferente a configuração do **sudo**.
+
+
+
+---
+
+## Programas e Processos
+
+No linux podemos dizer que existem dois grupos principais de arquivos no linux Sendo eles :
+- **Arquivos de repositório;**
+- **Arquivos executáveis;**
+
+Os **arquivos de repositório** são utilizados como armazenamento de dados, ele são usados para configurações de programas. 
+
+Já os **arquivos executáveis** executam ações no sistema sendo elas scripts ou um programa GUI completo.
+
+O que diferencia um arquivo executável é um unico bit ativo conhecido como bit-magico, dessa forma o **SO** interpreta o arquivo de uma forma especial.
+
+> [!tip] Dica
+> Os arquivos executáveis também são chamados de binários
+
+### Criando um Arquivo executável 
+
+Para esse exemplo vamos criar um arquivo executavel em **C**.
+
+Vamos criar um arquivo chamado  `exe.c` bem simples em **C** :
+
+```C
+ #include <stdio.h>
+
+ int main() {
+   printf("Isso foi executado pelo sistema\n");
+   return 0;
+ }
+```
+
+agora vamos utilizar do **gcc** para compilarmos nosso programa `gcc exe.c -o exe`.
+
+Usando o `ls -l` temos a seguinte saída:
+```shell
+.rwxr-xr-x   15k usuario  2 Mar 17:56   exe
+.rw-r--r--    99 usuario  2 Mar 17:55   exe.c
+```
+
+Podemos ver uma diferença clara no tamanho dos arquivos e também nas suas permissões, note que o `exe` possui permissão para execução o compilador `gcc` ja faz esse trabalho, alem de compilar nosso arquivo e faz o trabalho de atribuir a permissão de execução para todos.
+
+Vamos fazer alguns testes. Primeiro vamos executar nosso arquivo:
+
+```shell
+ $> ./exe
+Isso foi executado pelo sistema
+```
+ usamos o `./` para que o terminal saiba que precisa buscar no diretório que estamos, e vemos que ele executou perfeitamente.
+ 
+E se nos retirarmos a permissão de execução do arquivo ?
+
+```shell
+$> chmod -x exe
+$> ls -la
+Permissions Size User   Date Modified Name
+.rw-r--r--   15k finall  2 Mar 17:56   exe
+.rw-r--r--    99 finall  2 Mar 17:55  exe.c
+```
+Pronto sem permissão agora vamos executar : 
+
+```shell
+$> ./exe
+zsh: permission denied: ./exe
+```
+
+Ele não executa, e o nosso arquivo retorna um erro dizendo que não temos permissão para executar esse arquivo.
+
+- - - 
+
+Um **Processo** nada mais é do que um programa que esta em execução. Quando começamos a executar um programa o **SO** atribui um **PID** (Process ID) para que o processo possa ser identificado e gerenciado, cada processo possui um PID exclusivo e independe de outros processo possibilitando a execução de múltiplos processos ao mesmo tempo.
+
+usando o **top** podemos ver os processos que estão:
+ 
+![processo](./images/Linux/process.png)
+
+> [!Tip] Dica
+> O top é uma ferramenta muito boa porem existem substitutos melhores como o **htop** e o **btop** 
+
+Note que alem do PID podemos ver quem é o responsável pelo processo quando de memoria e CPU ele esta utilizando à quanto tempo ele esta executando e qual é o nome do processo.
+
+### Hierarquia de Processos
+
+Todos os processos do **linux** funcionam em uma hierarquia tendo um **processo pai** e possivelmente **processos filhos**. O processo **init** é o processo pai de todos os outros processo. Assim que iniciamos um novo processo ele tem o **init** como seu processo pai.
+
+![Arvore de Processos](./images/Linux/arvore_de_processos.png)
+
+
+Cada processo possui seu próprio espaço de endereço, que é usado para armazenar código e dados desse processo. Este espaço de endereço é isolado de outros processos, evitando que um processo acesse a memória de outro processo. o kernel gerencia esse isolamento usando mecanismos de proteção de memória.
+
+### Estados de Processos
+
+Um processo pode ter diversos estados possíveis que são uteis para o sistema gerenciar os processo dentre os estados possíveis os principais são:
+
+- **Running**: O processo esta atualmente em **execução** e executando alguma instrução.
+
+- **Sleeping**: O processo está **aguardando** algum evento, como por exemplo esta esperando alguma entrada de dados ou esperando um recurso ficar disponível .
+
+- **Stopped**:  O processo foi interrompido por um **sinal** e não esta mais executando no momento.
+
+- **Zombie:** O processo terminou suas de executar suas instruções porem, ainda não foi recolhido pelo **processo pai**.
+
+![adsfa](./images/Linux/estado_de_programa.png)
+
+### Gerenciando Processos
+
+Primeiramente precisamos compreender qual o estado dos processos no nosso sistema pra isso podemos usar o `top`  ou algum substituto, usaremos também   o `ps`:
+
+```shell
+$> ps aux
+```
+
+Este comando permite listar todos os processo de todos os **usuarios** que estão em execução.
+
+Podemos enviar sinais para os processos que estão em execução, assim alterando seu estado, por exemplo podemos enviar um sinal para matar um processo e seus filhos. 
+
+Existem vários sinais que podem ser enviados para processos no Linux, cada um com sua finalidade específica. Alguns dos sinais mais comumente usados incluem -
+
+- **SIGTERM** - Este sinal é usado para encerrar um processo normalmente. Quando um processo recebe esse sinal, ele tem a chance de limpar seus recursos antes de sair.
+
+- **SIGKILL** - Este sinal é usado para encerrar um processo à força. Quando um processo recebe este sinal, ele é imediatamente encerrado sem qualquer chance de limpar seus recursos.
+
+- **SIGHUP** - Este sinal é usado para notificar um processo que seu processo pai foi encerrado. Quando um processo recebe esse sinal, normalmente espera-se que ele também termine.
+
+- **SIGINT** - Este sinal é usado para interromper um processo. Normalmente é enviado quando o usuário pressiona Ctrl+C no terminal para interromper um processo em execução.
+
+Para enviar um sinal para um processo no Linux, você pode usar o comando kill, seguido do ID do processo e do número do sinal. 
+
+#### KILL 
+
+O comando `kill` é usado para para processos que esta em execução. Para executar o comando precisamos saber qual é o **PID** do processo que queremos finalizar por exemplo:
+
+```shell
+$> ps aux
+
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root        2143  0.0  0.1   4680  3840 pts/5    S    15:20   0:00 bash
+root        2160  0.0  0.0   2744  1280 pts/4    R+   15:20   0:03 ./muito_loop
+root        2161  0.0  0.1   5436  3584 pts/5    R+   15:20   0:00 ps aux
+
+```
+
+Vamos matar o processo do  `muito_loop` que é um programinha em **C** que executa um loop infinito. No nosso caso ele esta com o `PID` **2160** então:
+
+```shell
+$> kill 2160
+```
+
+pronto agora ele não esta mais executando.
+
+O comando `Kill` pode ser usado para mandar qualquer **sinal** para o processo. Podemos listar todos os **sinais** possível podemos usar o `kill -l`:
+
+```shell
+ $> kill -l
+1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+2) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+3) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+4) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+5) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+6) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+7) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+8) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+9) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+10) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+11) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+12) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+13) SIGRTMAX-1  64) SIGRTMAX
+```
+
+
+- - - 
+#### **killall**
+
+O `killall` faz basicamente o mesmo que o `kill` porem ele ao inves de usar o **PID** para matar um processo ele utiliza o nome do processo por exemplo podemos para o  navegador firefox  podemos utilizar :
+
+```shell
+$> killall firefox
+```
+
+- - - 
+#### **pstree**
+
+O comando `pstree` assim como `ps` mostra os processo em execução mas ele exibe em forma hierárquica:
+
+```shell
+$> pstree
+systemd-+-NetworkManager---3*[{NetworkManager}]
+        |-2*[agetty]
+        |-cron
+        |-dbus-daemon
+        |-login---bash
+        |-master-+-pickup
+        |        `-qmgr
+        |-networkd-dispat
+        |-polkitd---3*[{polkitd}]
+        |-rsyslogd---2*[{rsyslogd}]
+        |-sshd---sshd---sshd---bash---pstree
+        |-systemd---(sd-pam)
+        |-systemd-journal
+        |-systemd-logind
+        |-systemd-network
+        |-systemd-resolve
+        |-udisksd---5*[{udisksd}]
+        `-wpa_supplicant
+```
+
+com ele podemos ter uma noção melhor de qual processo é responsável pelo outro. Podemos usar de exemplo o próprio comando `pstree` 
+
+```shell
+ |-sshd---sshd---sshd---bash---pstree
+```
+
+vemos que o processo pai é o `sshd` porque estamos em um terminal remoto via `ssh` inclusive vemos que o filho do `sshd` é o bash  e por fim o `pstree`.
+#### **nice**
+
+Todos os processos são escalonados pelo **SO** para a execução e ficam um determinado tempo em execução pela **CPU** e depois é trocado pelo próximo processo na fila. 
+
+Uma forma de priorizar o nosso processo é fazer ele ter mais tempo de **CPU** e como fazemos isso ? Simples fazemos o nosso escalonar escolher ele mais vezes e para isso usamos o comando `nice`:
+
+```shell
+
+$> nice -n -20 meuprojeto  #a maior prioridade possivel
+```
+
+literalmente dizemos que o nosso processo é gente boa e por isso deve ser escalonado mais vezes.
+
+O nice tem um range de -20 a 19, onde -20 é a maior prioridade e 19 a menor prioridade. Por padrão os processos são iniciados com 0 de nice. 
+## SystemCTL
+
+
+## SSH
+
+## Samba
 
 ## User space Kernel Space
+
+
 
 ## Principais comandos
 
@@ -751,3 +1368,15 @@ tail -f /var/log/auth.log   # Monitora logs de autenticação
 journalctl -f               # Acompanha logs do systemd 
 grep "erro" /var/log/syslog # Filtra logs por palavra-chave
 ```
+
+
+
+
+## Bibliografia
+
+
+- [Process](https://pt.linux-console.net/?p=23274)
+- [Systemd.io](https://systemd.io)
+- [Systemctl](https://www.geeksforgeeks.org/systemctl-in-unix/)
+- [sudoers](https://www.digitalocean.com/community/tutorials/how-to-edit-the-sudoers-file)
+- [Linux](https://linuxhandbook.com/systemctl-commands/)
